@@ -1,7 +1,7 @@
 # Apache Spark End-To-End Data Engineering Project | Apple Data Analysis
 
 ## Project Overview
-This project implements a **full Big Data ETL (Extract, Transform, Load) pipeline using Apache Spark (PySpark) and Databricks**. The pipeline processes e-commerce transaction data related to Apple products (such as iPhones, AirPods, and MacBooks) to extract valuable business insights. The codebase is engineered with **production-ready Low-Level Design (LLD) principles**, specifically utilizing the **Factory Method pattern** to create a highly modular and scalable architecture.
+This project implements a **full ETL (Extract, Transform, Load) pipeline using Apache Spark (PySpark) and Databricks**. The pipeline processes e-commerce transaction data related to Apple products (such as iPhones, AirPods, and MacBooks) to extract valuable business insights. The codebase is engineered with **production-ready Low-Level Design (LLD) principles**, specifically utilizing the **Factory Method pattern** to create a highly modular and scalable architecture.
 
 ## Architecture & Technology Stack
 *   **Core Processing Engine:** Apache Spark (PySpark) and Spark SQL.
