@@ -14,25 +14,6 @@ This project implements a **full ETL (Extract, Transform, Load) pipeline using A
 ## Key Features & Design Patterns
 *   **Factory Design Pattern:** Implements `ReaderFactory` and `LoaderFactory` classes using an abstract interface. This allows the pipeline to dynamically instantiate the correct reader or writer class based on the input data type (CSV, Parquet, or Delta) without modifying core logic.
 *   **Modular Codebase:** The pipeline logic is cleanly decoupled into specific `Extractor`, `Transformer`, and `Loader` abstract classes and sub-classes.
-*   **Performance Optimizations:**
-    *   **Broadcast Joins:** Broadcasts smaller datasets (e.g., customer dimension tables) to all worker nodes to minimize expensive network shuffles, converting wide transformations into narrow transformations. The project also implements the advanced strategy of **repartitioning the larger DataFrame before broadcasting** to further optimize local join performance.
-    *   **Partitioning & Bucketing:** Loads data into the Data Lake with partition folders (e.g., `location=Orlando`) to optimize downstream queries and avoid full table scans. Bucketing is discussed for high-cardinality columns.
-    *   **Predicate Pushdown & Columnar Storage:** Leverages columnar formats like Parquet to push filters down to the storage level and select only required columns (predicate pruning), significantly reducing disk I/O.
-
-## Implemented Business Workflows (Transformations)
-The system uses a `WorkflowRunner` to schedule and execute distinct analytical pipelines.
-
-1.  **Workflow 1: Customers buying AirPods *immediately after* an iPhone**
-    *   **Goal:** Identify customer profiles who purchased an iPhone and subsequently purchased AirPods in their next transaction.
-    *   **Implementation:** Utilizes Spark Window functions to `PartitionBy` the customer ID and `orderBy` the transaction date ascending. It applies the **`lead()` function** to peek at the succeeding row and create a `next_product_name` column to filter the exact purchase sequence.
-2.  **Workflow 2: Customers exclusively buying iPhones and AirPods**
-    *   **Goal:** Isolate customers whose entire purchase history consists *only* of iPhones and AirPods (no other items like MacBooks).
-    *   **Implementation:** Groups the transactions by customer ID and applies the **`collect_set()` aggregation function** to generate a distinct array of purchased products. It then filters the records ensuring the array contains both products and strictly has a `size()` of exactly two.
-
-## Future Transformations (Roadmap)
-The modular architecture easily supports the addition of new workflows. Planned implementations include:
-*   Determining the average time delay between a customer purchasing an iPhone and an AirPod.
-*   Identifying the top three selling products in each category based on total revenue.
 
 ## Project Structure
 *   `workflow_runner`: Orchestrates the execution of different analytical pipelines (e.g., `first_workflow`, `second_workflow`).
